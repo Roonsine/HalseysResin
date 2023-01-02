@@ -17,33 +17,32 @@ def user(name):
 # Create a Route Decoration
 @app.route("/buttons")
 def buttons():
-    return render_template("buttons.html")
+    return render_template("components/buttons.html")
 
 # Create a Route Decoration
 @app.route("/cards")
 def cards():
-    return render_template("cards.html")
+    return render_template("components/cards.html")
 
 # Create a Route Decoration
 @app.route("/utilitiesColor")
 def utilitiesColor():
-     return render_template("utilitiesColor.html")
+     return render_template("utilities/utilitiesColor.html")
 
 # Create a Route Decoration
 @app.route("/utilitiesBorder")
 def utilitiesBorder():
-    return render_template("utilities-border.html")
+    return render_template("utilities/utilities-border.html")
 
 # Create a Route Decoration
 @app.route("/utilitiesAnimation")
 def utilitiesAnimation():
-    return render_template("utilities-animation.html")
+    return render_template("utilities/utilities-animation.html")
 
 # Create a Route Decoration
 @app.route("/utilitiesOther")
 def utilitiesOther():
-    return render_template("utilities-other.html")
-
+    return render_template("utilities/utilities-other.html")
 
 
 # Create a Route Decoration
@@ -54,6 +53,26 @@ def charts():
 @app.route("/tables")
 def tables():
     return render_template("tables.html")
+
+@app.route("/login")
+def login():
+    return render_template("pages/login.html")
+
+@app.route("/register")
+def register():
+    return render_template("pages/register.html")
+
+@app.route("/forgotPassword")
+def forgotPassword():
+    return render_template("pages/forgotPassword.html")
+
+@app.route("/error")
+def error():
+    return render_template("pages/error.html")
+
+@app.route("/blank")
+def blank():
+    return render_template("pages/blank.html")
 
 
 if __name__ == ("__main__"):
