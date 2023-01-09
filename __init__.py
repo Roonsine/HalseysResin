@@ -1,11 +1,18 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, flash
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
 
 # Create a Flask Instance 
 app = Flask(__name__)
-
 app.config['SECRET_KEY'] = "secretkey123"
 
-# Create a Route Decoration
+# Create a form class
+class NameForm(FlaskForm):
+    name = StringField("What's your name?", validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -14,38 +21,30 @@ def index():
 def user(name):
     return render_template("user.html", user_name = name)
 
-# Create a Route Decoration
 @app.route("/buttons")
 def buttons():
     return render_template("components/buttons.html")
 
-# Create a Route Decoration
 @app.route("/cards")
 def cards():
     return render_template("components/cards.html")
 
-# Create a Route Decoration
 @app.route("/utilitiesColor")
 def utilitiesColor():
      return render_template("utilities/utilitiesColor.html")
 
-# Create a Route Decoration
 @app.route("/utilitiesBorder")
 def utilitiesBorder():
     return render_template("utilities/utilities-border.html")
 
-# Create a Route Decoration
 @app.route("/utilitiesAnimation")
 def utilitiesAnimation():
     return render_template("utilities/utilities-animation.html")
 
-# Create a Route Decoration
 @app.route("/utilitiesOther")
 def utilitiesOther():
     return render_template("utilities/utilities-other.html")
 
-
-# Create a Route Decoration
 @app.route("/charts")
 def charts():
     return render_template("charts.html")
@@ -74,6 +73,16 @@ def error():
 def blank():
     return render_template("pages/blank.html")
 
+@app.route("/name", methods=['GET', 'POST'])
+def name():
+    name = None
+    form = NameForm()
+    # Validate form
+    if form.validate_on_submit():
+        name = form.name.data
+        form.name.data = ''
+        flash("Form Submitted")
+    return render_template("test/name.html", name=name, form=form)
 
 if __name__ == ("__main__"):
     app.run(debug=True)
