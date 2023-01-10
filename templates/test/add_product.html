@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-
+<div class="container">
 {% for message in get_flashed_messages() %}
 <div class="alert alert-success alert-dismissible fade show" role="alert">
     {{message}}
@@ -25,11 +25,21 @@
         {{ form.submit() }}
     </form>
     <br/><br/><br/>
-    <h1>Product List</h1>
-    {% for our_product in our_products %}
-        {{ our_product.id }}. {{ our_product.name }} - {{ our_product.price }}<br/>
-    {% endfor %}
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Product List</h6>
+      </div>
+      <div class="card-body">
+      {% for our_product in our_products %}
+          {{ our_product.id }}. {{ our_product.name }} - {{ our_product.price }}<br/>
+      {% endfor %}
+      </div>
+  </div>
 
+</div>
+
+
+    </div>
 </div>
 
 {% endblock content %}
