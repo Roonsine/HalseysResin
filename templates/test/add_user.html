@@ -14,7 +14,7 @@
 {% endfor %}
 
     {% if name %}
-        <h1>Hello {{name}}</h1>
+        <h1>User List</h1>
     {% else %}
         <h1>Whats your name?</h1>
         <br/>
@@ -24,8 +24,17 @@
             {{ form.name.label }}
             {{ form.name }}
             <br/>
+            {{ form.hidden_tag() }}
+            
+            {{ form.email.label }}
+            {{ form.email }}
+            <br/>
             {{ form.submit() }}
         </form>
+        <br><br><br>
+        {% for our_user in our_users %}
+           {{ our_user.id }} . {{ our_user.name }} - {{ our_user.email}}<br/>
+        {% endfor %}
     {% endif %}
 
 </div>
