@@ -1,7 +1,7 @@
 from flask import Flask, render_template, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import Forms 
+from .. import Forms 
 
 # Create the extension
 db = SQLAlchemy()
