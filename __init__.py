@@ -10,7 +10,10 @@ db = SQLAlchemy()
 # Create a Flask Instance 
 app = Flask(__name__)
 # Add Database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+# Old SQLite DB
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+# New MySQL DB
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:Pass123@localhost/users'
 # initialize the app with the extension
 db.init_app(app)
 # Secret Key!
@@ -31,7 +34,7 @@ class Products(db.Model):
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False, unique=True)
-    email = db.Column(db.String)
+    email = db.Column(db.String(20))
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Create a String
@@ -125,7 +128,7 @@ def AddProduct():
     price = None
     form = ProductForm()
     if form.validate_on_submit():
-        if db.session.query(Products).filter_by(name=name).count:
+        if db.session.query(Products).filter_by(name=name):
             product = Products(name=form.name.data, price=form.price.data)         
             db.session.add(product)
             db.session.commit()
@@ -142,7 +145,7 @@ def AddUser():
     name = None
     form = UserForm()
     if form.validate_on_submit():
-        if db.session.query(Users).filter_by(name=name).count:
+        if db.session.query(Users).filter_by(name=name):
             user = Users(name=form.name.data, email=form.email.data)
             db.session.add(user)
             db.session.commit()
