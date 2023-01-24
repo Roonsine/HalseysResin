@@ -12,7 +12,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 # initialize the app with the extension
 db.init_app(app)
 # Secret Key!
-app.config['SECRET_KEY'] = "secretkey123"
+f=open("secret.txt", "r")
+line = f.readline()
+print(line)
+app.config['SECRET_KEY'] = line
 
 # Create a Model
 class Products(db.Model):
