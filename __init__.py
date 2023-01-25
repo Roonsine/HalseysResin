@@ -1,7 +1,11 @@
 from flask import Flask, render_template, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import Forms 
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
+from flask_wtf import FlaskForm
+
+
 
 # Create the extension
 db = SQLAlchemy()
@@ -45,6 +49,22 @@ class Users(db.Model):
 # All models go above this
 with app.app_context():
     db.create_all()
+
+class UserForm(FlaskForm):
+    name = StringField("Name?", validators=[DataRequired()])
+    email = StringField("Email?", validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+# Create a form class
+class ProductForm(FlaskForm):
+    name = StringField("What's the Product Name?", validators=[DataRequired()])
+    price = StringField("How much does this cost?", validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+# Create a form class
+class NameForm(FlaskForm):
+    name = StringField("What's your name?", validators=[DataRequired()])
+    submit = SubmitField("Submit")
 
 
 @app.route("/")
@@ -111,7 +131,7 @@ def blank():
 def AddProduct():
     name = None
     price = None
-    form = Forms.ProductForm()
+    form = ProductForm()
     if form.validate_on_submit():
         if db.session.query(Products).filter_by(name=name):
             product = Products(name=form.name.data, price=form.price.data)         
@@ -128,7 +148,7 @@ def AddProduct():
 @app.route('/user/add', methods=['GET', 'POST'])
 def AddUser(): 
     name = None
-    form = Forms.UserForm()
+    form = UserForm()
     if form.validate_on_submit():
         if db.session.query(Users).filter_by(name=name):
             user = Users(name=form.name.data, email=form.email.data)
@@ -144,7 +164,7 @@ def AddUser():
 @app.route("/name", methods=['GET', 'POST'])
 def name():
     name = None
-    form = Forms.NameForm()
+    form = NameForm()
     # Validate form
     if form.validate_on_submit():
         name = form.name.data
