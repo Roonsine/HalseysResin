@@ -1,20 +1,24 @@
 from flask import Flask, render_template, flash
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import Forms 
 
 # Create the extension
 db = SQLAlchemy()
 # Create a Flask Instance 
 app = Flask(__name__)
 # Add Database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+# Old SQLite DB
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+# New MySQL DB
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:Pass123@localhost/users'
 # initialize the app with the extension
 db.init_app(app)
 # Secret Key!
-app.config['SECRET_KEY'] = "secretkey123"
+f=open("secret.txt", "r")
+line = f.readline()
+print(line)
+app.config['SECRET_KEY'] = line
 
 # Create a Model
 class Products(db.Model):
@@ -31,7 +35,7 @@ class Products(db.Model):
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False, unique=True)
-    email = db.Column(db.String)
+    email = db.Column(db.String(20))
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Create a String
@@ -41,22 +45,6 @@ class Users(db.Model):
 # All models go above this
 with app.app_context():
     db.create_all()
-    
-class UserForm(FlaskForm):
-    name = StringField("Name?", validators=[DataRequired()])
-    email = StringField("Email?", validators=[DataRequired()])
-    submit = SubmitField("Submit")
-
-# Create a form class
-class ProductForm(FlaskForm):
-    name = StringField("What's the Product Name?", validators=[DataRequired()])
-    price = StringField("How much does this cost?", validators=[DataRequired()])
-    submit = SubmitField("Submit")
-
-# Create a form class
-class NameForm(FlaskForm):
-    name = StringField("What's your name?", validators=[DataRequired()])
-    submit = SubmitField("Submit")
 
 
 @app.route("/")
@@ -123,9 +111,9 @@ def blank():
 def AddProduct():
     name = None
     price = None
-    form = ProductForm()
+    form = Forms.ProductForm()
     if form.validate_on_submit():
-        if db.session.query(Products).filter_by(name=name).count:
+        if db.session.query(Products).filter_by(name=name):
             product = Products(name=form.name.data, price=form.price.data)         
             db.session.add(product)
             db.session.commit()
@@ -135,14 +123,14 @@ def AddProduct():
         form.price.data = ''
         flash("Product Added")
     our_products = Products.query.order_by(Products.date_added)
-    return render_template("test/add_product.html", form = form, name=name,our_products=our_products)
+    return render_template("test/add_product.html", form = form, name=name,our_products=our_products, price=price)
 
 @app.route('/user/add', methods=['GET', 'POST'])
 def AddUser(): 
     name = None
-    form = UserForm()
+    form = Forms.UserForm()
     if form.validate_on_submit():
-        if db.session.query(Users).filter_by(name=name).count:
+        if db.session.query(Users).filter_by(name=name):
             user = Users(name=form.name.data, email=form.email.data)
             db.session.add(user)
             db.session.commit()
@@ -156,7 +144,7 @@ def AddUser():
 @app.route("/name", methods=['GET', 'POST'])
 def name():
     name = None
-    form = NameForm()
+    form = Forms.NameForm()
     # Validate form
     if form.validate_on_submit():
         name = form.name.data

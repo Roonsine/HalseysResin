@@ -116,10 +116,34 @@
                         <h6 class="collapse-header">Other Pages:</h6>
                         <a class="collapse-item" href="{{url_for('error')}}">404 Page</a>
                         <a class="collapse-item" href="{{url_for('blank')}}">Blank Page</a>
-                        <h6 class="collapse-header">Test Area:</h6>
-                        <a class="collapse-item" href="{{url_for('name')}}">Name</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Products</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Create/Edit Products</h6>
                         <a class="collapse-item" href="{{url_for('AddProduct')}}">Add Product</a>
+
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Users</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Create/Edit Users</h6>
                         <a class="collapse-item" href="{{url_for('AddUser')}}">Add User</a>
+
                     </div>
                 </div>
             </li>
