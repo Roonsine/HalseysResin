@@ -1,49 +1,68 @@
 {% extends 'layout.html' %}
 
+{% block header %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Add User</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Add</a></li>
+                    <li class="breadcrumb-item active">Add User</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+{% endblock header %}
 {% block content %}
+<div class="grid grid-cols-3 gap-4">
+    <div class="col-1">
+        {% for message in get_flashed_messages() %}
+        Hey {{name}} - {{message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        </button>
+        {% endfor %}
+    </div>
 
-<div class="container">
-{% for message in get_flashed_messages() %}
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-    Hey {{name}} - {{message}}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-
-{% endfor %}
-
-    {% if name %}
+    <div>
+        {% if name %}
         <h1>User List</h1>
-    {% else %}
+        {% else %}
         <h1>Whats your name?</h1>
-        <br/>
+        <br />
         <form method="POST">
             {{ form.hidden_tag() }}
-            
+
             {{ form.name.label }}
             {{ form.name }}
-            <br/>
+            <br />
             {{ form.hidden_tag() }}
-            
+
             {{ form.email.label }}
             {{ form.email }}
-            <br/>
+            <br />
             {{ form.submit() }}
         </form>
-        <br><br><br>
+    </div>
+    <div>
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Users</h6>
             </div>
-        <div class="card-body">
-        {% for our_user in our_users %}
-           {{ our_user.id }} . {{ our_user.name }} - {{ our_user.email}}<br/>
-        {% endfor %}
+            <div class="card-body">
+                {% for our_user in our_users %}
+                {{ our_user.id }} . {{ our_user.name }} - {{ our_user.email}}<br />
+                {% endfor %}
+            </div>
+
+            {% endif %}
+        </div>
+
     </div>
-    {% endif %}
-
-
 </div>
+
 
 {% endblock content %}
