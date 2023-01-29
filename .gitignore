@@ -1,0 +1,1 @@
+qld --help --verbose | grep 'log-error' | tail -1

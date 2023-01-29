@@ -13,9 +13,9 @@ db = SQLAlchemy()
 app = Flask(__name__)
 # Add Database
 # Old SQLite DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 # New MySQL DB
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:Pass123@localhost/users'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost/users'
 # initialize the app with the extension
 db.init_app(app)
 # Secret Key!
@@ -73,57 +73,6 @@ def index():
 def user(name):
     return render_template("user.html", user_name = name)
 
-@app.route("/buttons")
-def buttons():
-    return render_template("components/buttons.html")
-
-@app.route("/cards")
-def cards():
-    return render_template("components/cards.html")
-
-@app.route("/utilitiesColor")
-def utilitiesColor():
-     return render_template("utilities/utilitiesColor.html")
-
-@app.route("/utilitiesBorder")
-def utilitiesBorder():
-    return render_template("utilities/utilities-border.html")
-
-@app.route("/utilitiesAnimation")
-def utilitiesAnimation():
-    return render_template("utilities/utilities-animation.html")
-
-@app.route("/utilitiesOther")
-def utilitiesOther():
-    return render_template("utilities/utilities-other.html")
-
-@app.route("/charts")
-def charts():
-    return render_template("charts.html")
-
-@app.route("/tables")
-def tables():
-    return render_template("tables.html")
-
-@app.route("/login")
-def login():
-    return render_template("pages/login.html")
-
-@app.route("/register")
-def register():
-    return render_template("pages/register.html")
-
-@app.route("/forgotPassword")
-def forgotPassword():
-    return render_template("pages/forgotPassword.html")
-
-@app.route("/error")
-def error():
-    return render_template("pages/error.html")
-
-@app.route("/blank")
-def blank():
-    return render_template("pages/blank.html")
 
 @app.route('/products/add', methods=['GET', 'POST'])
 def AddProduct():

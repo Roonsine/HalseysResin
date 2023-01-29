@@ -7,7 +7,7 @@ DO NOT RUN MULTIPLE TIMES!! SAVING THIS JUST FOR MYSELF TO RE-CREATE THE DB ON T
 mydb = mysql.connector.connect(
     host ='localhost',
     user = 'root',
-    passwd = 'Pass123'
+    passwd = 'root'
 )
 
 my_cursor = mydb.cursor()
