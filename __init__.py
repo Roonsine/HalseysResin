@@ -27,6 +27,7 @@ class Products(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False, unique=True)
     price = db.Column(db.String(10))
+    size = db.Column(db.String(10))
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Create a String
@@ -89,6 +90,7 @@ class UserForm(FlaskForm):
 class ProductForm(FlaskForm):
     name = StringField("What's the Product Name?", validators=[DataRequired()])
     price = StringField("How much does this cost?", validators=[DataRequired()])
+    size = StringField("Whats the size?", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
 class NameForm(FlaskForm):
@@ -150,19 +152,22 @@ def AddExpense():
 def AddProduct():
     name = None
     price = None
+    size = None
     form = ProductForm()
     if form.validate_on_submit():
         if db.session.query(Products).filter_by(name=name):
-            product = Products(name=form.name.data, price=form.price.data)         
+            product = Products(name=form.name.data, price=form.price.data, size = form.size.data)         
             db.session.add(product)
             db.session.commit()
         name = form.name.data
         price = form.price.data
+        size = form.size.data
         form.name.data = ''
         form.price.data = ''
+        form.size.data = ''
         flash("Product Added")
     our_products = Products.query.order_by(Products.date_added)
-    return render_template("test/add_product.html", form = form, name=name,our_products=our_products, price=price)
+    return render_template("test/add_product.html", form = form, name=name,our_products=our_products, price=price, size = size)
 
 @app.route('/user/add', methods=['GET', 'POST'])
 def AddUser(): 
