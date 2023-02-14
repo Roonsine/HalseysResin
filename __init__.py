@@ -44,22 +44,53 @@ class Users(db.Model):
     def __repr__(self):
         return '<Name %r>' % self.name
 
+class Expense(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    expenseSource = db.Column(db.String(20), nullable=False, unique=True)
+    expenseAmount = db.Column(db.String(20))
+    expenseDate = db.Column(db.String(20))
+
+    # Create a String
+    def __repr__(self):
+        return '<Name %r>' % self.name
+
+# Create a Model
+class Income(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    incomeSource = db.Column(db.String(20), nullable=False, unique=True)
+    incomeAmount = db.Column(db.String(20))
+    incomeDate = db.Column(db.String(20))
+
+    # Create a String
+    def __repr__(self):
+        return '<Name %r>' % self.name
+
 # All models go above this
 with app.app_context():
     db.create_all()
+
+class ExpenseForm(FlaskForm):
+    expenseSource = StringField("What is the source of this expense?", validators=[DataRequired()])
+    expenseAmount = StringField("What is the amount?", validators=[DataRequired()])
+    expenseDate = StringField("When did this expense Occur?", validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+class IncomeForm(FlaskForm):
+    incomeSource = StringField("What is the source of this income?", validators=[DataRequired()])
+    incomeAmount = StringField("What is the amount?", validators=[DataRequired()])
+    incomeDate = StringField("When did this income Occur?", validators=[DataRequired()])
+    submit = SubmitField("Submit")
 
 class UserForm(FlaskForm):
     name = StringField("Name?", validators=[DataRequired()])
     email = StringField("Email?", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
-# Create a form class
 class ProductForm(FlaskForm):
     name = StringField("What's the Product Name?", validators=[DataRequired()])
     price = StringField("How much does this cost?", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
-# Create a form class
 class NameForm(FlaskForm):
     name = StringField("What's your name?", validators=[DataRequired()])
     submit = SubmitField("Submit")
@@ -71,8 +102,49 @@ def index():
 
 @app.route("/user/<name>")
 def user(name):
-    return render_template("user.html", user_name = name)
+    return render_template("user/user.html", user_name = name)
 
+@app.route('/income/add', methods=['GET', 'POST'])
+def AddIncome():
+    incomeSource = None
+    incomeAmount = None
+    incomeDate = None
+    form = IncomeForm()
+    if form.validate_on_submit():
+        if db.session.query(Income).filter_by(incomeAmount=incomeAmount):
+            income = Income(incomeSource = form.incomeSource.data, incomeAmount = form.incomeAmount.data, incomeDate = form.incomeDate.data)
+            db.session.add(income)
+            db.session.commit()
+        incomeSource = form.incomeSource.data
+        incomeAmount = form.incomeAmount.data
+        incomeDate = form.incomeDate.data
+        form.incomeSource.data = ''
+        form.incomeAmount.data = ''
+        form.incomeDate.data = ''
+        flash('Income Added')
+    our_income = Income.query.order_by(Income.incomeDate)
+    return render_template("test/add_income.html", form=form, incomeAmount=incomeAmount, incomeSource=incomeSource, incomeDate=incomeDate, our_income=our_income)
+
+@app.route('/expense/add', methods=['GET', 'POST'])
+def AddExpense():
+    expenseSource = None
+    expenseAmount = None
+    expenseDate = None
+    form = ExpenseForm()
+    if form.validate_on_submit():
+        if db.session.query(Expense).filter_by(expenseAmount=expenseAmount):
+            expense = Expense(expenseSource = form.expenseSource.data, expenseAmount = form.expenseAmount.data, expenseDate = form.expenseDate.data)
+            db.session.add(expense)
+            db.session.commit()
+        expenseSource = form.expenseSource.data
+        expenseAmount = form.expenseAmount.data
+        expenseDate = form.expenseDate.data
+        form.expenseAmount.data = ''
+        form.expenseAmount.data = ''
+        form.expenseDate.data = ''
+        flash('Expense Added')
+    our_expense = Expense.query.order_by(Expense.expenseDate)
+    return render_template("test/add_expense.html", form=form, expenseAmount=expenseAmount, expenseSource=expenseSource, expenseDate=expenseDate, our_expense=our_expense)
 
 @app.route('/products/add', methods=['GET', 'POST'])
 def AddProduct():
@@ -106,7 +178,7 @@ def AddUser():
         form.email.data = ''
         flash("User Added")
     our_users = Users.query.order_by(Users.date_added)
-    return render_template("test/add_user.html", name=name, form=form, our_users=our_users)
+    return render_template("user/add_user.html", name=name, form=form, our_users=our_users)
 
 @app.route("/name", methods=['GET', 'POST'])
 def name():

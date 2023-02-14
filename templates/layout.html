@@ -8,7 +8,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Starter</title>
+    <title>Halseys Designs | version 0.001</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -167,6 +167,30 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <a href="{{url_for('AddUser')}}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Users</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item menu-closed">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p><span class="right badge badge-danger" style="margin-right:32px;">New</span>
+                                    Income/Expenses
+
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{url_for('AddIncome')}}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Income</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{url_for('AddExpense')}}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Expenses</p>
                                     </a>
                                 </li>
                             </ul>

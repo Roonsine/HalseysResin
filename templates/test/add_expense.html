@@ -16,26 +16,26 @@
     <form method="POST">
         {{ form.hidden_tag() }}
         
-        {{ form.name.label }}
-        {{ form.name }}
+        {{ form.expenseSource.label }}
+        {{ form.expenseSource }}
         <br/>
-        {{ form.price.label }}
-        {{ form.price }}
+        {{ form.expenseAmount.label }}
+        {{ form.expenseAmount }}
         <br/>
-        {{ form.size.label }}
-        {{ form.size }}
+        {{ form.expenseDate.label }}
+        {{ form.expenseDate }}
         <br/>
         {{ form.submit() }}
     </form>
     <br/><br/><br/>
     <div class="card shadow mb-4">
       <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Product List</h6>
+          <h6 class="m-0 font-weight-bold text-primary">Expense List</h6>
       </div>
 
       <div class="card-body">
-      {% for our_product in our_products %}
-          {{ our_product.id }}. {{ our_product.name }} - ${{ our_product.price }} - {{ our_product.size }}<br/>
+      {% for expense in our_expense %}
+          {{ expense.id }}. {{ expense.incomeSource }} - ${{ expense.incomeAmount }} - {{ expense.incomeDate }}<br/>
       {% endfor %}
       </div>
   </div>
