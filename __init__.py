@@ -1,11 +1,7 @@
-from flask import Flask, render_template, flash
+from flask import Flask, render_template, flash, request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
-from flask_wtf import FlaskForm
-
-
+from webForms import IncomeForm, ExpenseForm, UserForm, ProductForm, NameForm
 
 # Create the extension
 db = SQLAlchemy()
@@ -20,83 +16,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost/use
 db.init_app(app)
 # Secret Key!
 app.config['SECRET_KEY'] = "secretkey123"
-
-
-# Create a Model
-class Products(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False, unique=True)
-    price = db.Column(db.String(10))
-    size = db.Column(db.String(10))
-    date_added = db.Column(db.DateTime, default=datetime.utcnow)
-
-    # Create a String
-    def __repr__(self):
-        return '<Name %r>' % self.name
-
-# Create a Model
-class Users(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False, unique=True)
-    email = db.Column(db.String(20))
-    date_added = db.Column(db.DateTime, default=datetime.utcnow)
-
-    # Create a String
-    def __repr__(self):
-        return '<Name %r>' % self.name
-
-class Expense(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    expenseSource = db.Column(db.String(20), nullable=False, unique=True)
-    expenseAmount = db.Column(db.String(20))
-    expenseDate = db.Column(db.String(20))
-
-    # Create a String
-    def __repr__(self):
-        return '<Name %r>' % self.name
-
-# Create a Model
-class Income(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    incomeSource = db.Column(db.String(20), nullable=False, unique=True)
-    incomeAmount = db.Column(db.String(20))
-    incomeDate = db.Column(db.String(20))
-
-    # Create a String
-    def __repr__(self):
-        return '<Name %r>' % self.name
-
-# All models go above this
-with app.app_context():
-    db.create_all()
-
-class ExpenseForm(FlaskForm):
-    expenseSource = StringField("What is the source of this expense?", validators=[DataRequired()])
-    expenseAmount = StringField("What is the amount?", validators=[DataRequired()])
-    expenseDate = StringField("When did this expense Occur?", validators=[DataRequired()])
-    submit = SubmitField("Submit")
-
-class IncomeForm(FlaskForm):
-    incomeSource = StringField("What is the source of this income?", validators=[DataRequired()])
-    incomeAmount = StringField("What is the amount?", validators=[DataRequired()])
-    incomeDate = StringField("When did this income Occur?", validators=[DataRequired()])
-    submit = SubmitField("Submit")
-
-class UserForm(FlaskForm):
-    name = StringField("Name?", validators=[DataRequired()])
-    email = StringField("Email?", validators=[DataRequired()])
-    submit = SubmitField("Submit")
-
-class ProductForm(FlaskForm):
-    name = StringField("What's the Product Name?", validators=[DataRequired()])
-    price = StringField("How much does this cost?", validators=[DataRequired()])
-    size = StringField("Whats the size?", validators=[DataRequired()])
-    submit = SubmitField("Submit")
-
-class NameForm(FlaskForm):
-    name = StringField("What's your name?", validators=[DataRequired()])
-    submit = SubmitField("Submit")
-
 
 @app.route("/")
 def index():
@@ -167,7 +86,25 @@ def AddProduct():
         form.size.data = ''
         flash("Product Added")
     our_products = Products.query.order_by(Products.date_added)
-    return render_template("test/add_product.html", form = form, name=name,our_products=our_products, price=price, size = size)
+    return render_template("products/add_product.html", form = form, name=name,our_products=our_products, price=price, size = size)
+
+@app.route('/product/update/<int:id>', methods=['GET', 'POST'])
+def UpdateProduct(id = None):
+    form = ProductForm()
+    productToUpdate = Products.query.get_or_404(id)
+    if request.method == "POST":
+        productToUpdate.name = request.form['name']
+        productToUpdate.price = request.form['price']
+        productToUpdate.size = request.form['size']
+        try:
+            db.session.commit()
+            flash("Product Updated Successfully")
+            return render_template('products/updateProduct.html', form = form, productToUpdate = productToUpdate)
+        except:
+            flash("Error occured, please try again.")
+            return render_template('products/updateProduct.html', form = form, productToUpdate = productToUpdate)
+    else:
+        return render_template('products/updateProduct.html', form = form, productToUpdate = productToUpdate)
 
 @app.route('/user/add', methods=['GET', 'POST'])
 def AddUser(): 
@@ -195,6 +132,51 @@ def name():
         form.name.data = ''
         flash("Form Submitted")
     return render_template("test/name.html", name=name, form=form)
+
+# Create a Model
+class Products(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False, unique=True)
+    price = db.Column(db.String(10))
+    size = db.Column(db.String(10))
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Create a String
+    def __repr__(self):
+        return '<Name %r>' % self.name
+
+# Create a Model
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False, unique=True)
+    email = db.Column(db.String(20))
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Create a String
+    def __repr__(self):
+        return '<Name %r>' % self.name
+
+class Expense(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    expenseSource = db.Column(db.String(20), nullable=False, unique=True)
+    expenseAmount = db.Column(db.String(20))
+    expenseDate = db.Column(db.DateTime)
+
+    # Create a String
+    def __repr__(self):
+        return '<Name %r>' % self.name
+
+# Create a Model
+class Income(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    incomeSource = db.Column(db.String(20), nullable=False, unique=True)
+    incomeAmount = db.Column(db.String(20))
+    incomeDate = db.Column(db.DateTime)
+
+    # Create a String
+    def __repr__(self):
+        return '<Name %r>' % self.name
+
 
 if __name__ == ("__main__"):
     app.run(debug=True)

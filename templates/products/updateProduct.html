@@ -30,14 +30,12 @@
     <br/><br/><br/>
     <div class="card shadow mb-4">
       <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Product List</h6>
+          <h6 class="m-0 font-weight-bold text-primary">Product Being Updated</h6>
       </div>
 
       <div class="card-body">
-      {% for our_product in our_products %}
-          {{ our_product.id }}. {{ our_product.name }} - ${{ our_product.price }} - {{ our_product.size }}<br/>
-      {% endfor %}
-      </div>
+          {{ productToUpdate.id }}. {{ productToUpdate.name }} - ${{ productToUpdate.price }} - {{ productToUpdate.size }}<br/>
+     </div>
   </div>
 
 </div>
