@@ -35,7 +35,7 @@
 
       <div class="card-body">
       {% for expense in our_expense %}
-          {{ expense.id }}. {{ expense.expense.Source }} - ${{ expense.expenseAmount }} - {{ expense.expenseDate }}<br/>
+          {{ expense.id }}. {{ expense.expenseSource }} - ${{ expense.expenseAmount }} - {{ expense.expenseDate }}<br/>
       {% endfor %}
       </div>
   </div>
