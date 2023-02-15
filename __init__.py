@@ -1,7 +1,7 @@
 from flask import Flask, render_template, flash, request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from webForms import IncomeForm, ExpenseForm, UserForm, ProductForm, NameForm
+from .webForms import IncomeForm, ExpenseForm, UserForm, ProductForm, NameForm
 
 # Create the extension
 db = SQLAlchemy()
