@@ -2,9 +2,9 @@ from flask import Flask, render_template, flash, request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 # use this for the server
-#from . import webForms as wf
+from . import webForms as wf
 # use this for localhost
-import webForms as wf
+#import webForms as wf
 
 # Create the extension
 db = SQLAlchemy()
