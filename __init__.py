@@ -1,8 +1,10 @@
 from flask import Flask, render_template, flash, request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from . import webForms as wf
-#import webForms as wf
+# use this for the server
+#from . import webForms as wf
+# use this for localhost
+import webForms as wf
 
 # Create the extension
 db = SQLAlchemy()
@@ -45,7 +47,7 @@ def AddIncome():
         form.incomeDate.data = ''
         flash('Income Added')
     our_income = Income.query.order_by(Income.incomeDate)
-    return render_template("test/add_income.html", form=form, incomeAmount=incomeAmount, incomeSource=incomeSource, incomeDate=incomeDate, our_income=our_income)
+    return render_template("income/add_income.html", form=form, incomeAmount=incomeAmount, incomeSource=incomeSource, incomeDate=incomeDate, our_income=our_income)
 
 @app.route('/expense/add', methods=['GET', 'POST'])
 def AddExpense():
@@ -66,7 +68,25 @@ def AddExpense():
         form.expenseDate.data = ''
         flash('Expense Added')
     our_expense = Expense.query.order_by(Expense.expenseDate)
-    return render_template("test/add_expense.html", form=form, expenseAmount=expenseAmount, expenseSource=expenseSource, expenseDate=expenseDate, our_expense=our_expense)
+    return render_template("expense/add_expense.html", form=form, expenseAmount=expenseAmount, expenseSource=expenseSource, expenseDate=expenseDate, our_expense=our_expense)
+
+@app.route('/expense/update/<int:id>', methods=['GET', 'POST'])
+def UpdateExpense(id):
+    form = wf.ExpenseForm()
+    expenseToUpdate = Expense.query.get_or_404(id)
+    if request.method == "POST":
+        expenseToUpdate.expenseSource = request.form['expenseSource']
+        expenseToUpdate.expenseAmount = request.form['expenseAmount']
+        expenseToUpdate.expenseDate = request.form['expenseDate']
+        try:
+            db.session.commit()
+            flash('Expense updated successfully')
+            return render_template('expense/updateExpense.html', form=form, expenseToUpdate=expenseToUpdate)
+        except:
+            flash('Error occured, please try again')
+            return render_template('expense/updateExpense.html', form=form, expenseToUpdate=expenseToUpdate)
+    else:
+        return render_template('expense/updateExpense.html', form=form, expenseToUpdate=expenseToUpdate)
 
 @app.route('/products/add', methods=['GET', 'POST'])
 def AddProduct():

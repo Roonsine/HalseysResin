@@ -35,7 +35,15 @@
 
       <div class="card-body">
       {% for expense in our_expense %}
-          {{ expense.id }}. {{ expense.expenseSource }} - ${{ expense.expenseAmount }} - {{ expense.expenseDate }}<br/>
+
+        {{ expense.id }} : 
+        <a href="{{url_for('UpdateExpense', id=expense.id)}}">
+        {{ expense.expenseSource }}
+        </a> - 
+        ${{ expense.expenseAmount }}
+         - 
+         {{ expense.expenseDate }}
+         <br/>
       {% endfor %}
       </div>
   </div>
